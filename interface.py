@@ -1,5 +1,15 @@
-# database = {
-#     fp : (id, t)
+# interface.py
+
+# Project Structure
+# self.db = {
+#     "songs": {
+#         fingerprints1 : (absolute time, song_id) -> access key: del value[key]
+#         fingerprints2 : (absolute time, song_id)
+#     }
+#     "artist_information": {
+#         song_id1 : (artist_name1, song_name1) -> del self.db["artist_information"][song_id]
+#         song_id2: (artist_name2, song_name2)
+#     }
 # }
 
 import pickle
@@ -26,30 +36,29 @@ class Interface:
     #Database dict
     #key: fingerprints
     #value: (absolute time, song_id)
-    
-    '''
-    self.db = {
-        "songs": {
-            fingerprints1 : (absolute time, song_id) -> access key: del value[key]
-            fingerprints2 : (absolute time, song_id)
-        }
-        "artist_information": {
-            song_id1 : (artist_name1, song_name1) -> del self.db["artist_information"][song_id]
-            song_id2: (artist_name2, song_name2)
-        }
-    }
-    '''
     def delete_song(self, song_id):
+        # Check if the song_id exists in any song entries
         found = False
-        if song_id in self.db["songs"][-1]:
-            found = True
-
         for songs in self.db["songs"]:
-            if song_id in songs:
-                del self.db[]
-            del self.db["artist_information"][song_id]
+            if song_id in songs.values():
+                found = True
+                # Remove the song entry from "songs"
+                for key in list(songs.keys()):
+                    if song_id in songs[key]:
+                        songs[key].remove(song_id)
+                        if not songs[key]:
+                            del songs[key]
+
+        if found:
+            # Remove the song entry from "artist_information"
+            if song_id in self.db["artist_information"]:
+                del self.db["artist_information"][song_id]
             self.save_db()
     
+        else:
+            print(f"Song ID {song_id} not found in the database.")
+
+
     def add_song(self, fingerprints, song_name, artist_name):
 
         '''
