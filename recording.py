@@ -5,12 +5,6 @@ from microphone import record_audio
 from typing import Tuple
 import librosa 
 
-
-def load_audio_file(file_path):
-    samples, sample_rate = librosa.load(file_path)
-    return samples, sample_rate
-
-
 def load_and_parse(file_path: str, source_type: str) -> Tuple[np.ndarray, int]:
     """
     Loads a saved digital signal from an npy file and returns the signal and the sampling rate.
@@ -34,7 +28,8 @@ def load_and_parse(file_path: str, source_type: str) -> Tuple[np.ndarray, int]:
         samples = loaded_array[1:]
     
     else:
-        load_audio_file(file_path, 44100)
+        samples, sample_rate = librosa.load(file_path)
+
     return samples, sample_rate
 
 def record_and_save(listen_time: float, file_path: str):
@@ -102,13 +97,13 @@ def generate_random_clips(audio_samples, sr, clip_length_sec, num_clips):
 
     return clips
 
-# testing
-record_and_save(10, "./example-recording.npy")
-samples, sample_rate = load_and_parse(file_path="./example-recording.npy") 
+# # testing
+# record_and_save(10, "./example-recording.npy")
+# samples, sample_rate = load_and_parse(file_path="./example-recording.npy") 
 
-clips = generate_random_clips(samples, sample_rate, 1, 5)
+# clips = generate_random_clips(samples, sample_rate, 1, 5)
 
-# Print details of the generated clips
-for i, clip in enumerate(clips):
-    print(f"Clip {i+1}: {len(clip)} samples")
+# # Print details of the generated clips
+# for i, clip in enumerate(clips):
+#     print(f"Clip {i+1}: {len(clip)} samples")
 

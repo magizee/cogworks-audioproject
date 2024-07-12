@@ -6,6 +6,8 @@ from typing import Tuple
 import librosa 
 import matplotlib.mlab as mlab
 from numba import njit
+from typing import List, Tuple, Dict
+
 
 def spectrogram(samples, sampling_rate):
     spectrogram, freqs, times = mlab.specgram(
@@ -89,3 +91,33 @@ def peak_finder(
             peaks.append((r, c))
     return peaks
 
+def plot_compare(
+    data: np.ndarray,
+    peak_rendering_func: Callable[[np.ndarray], np.ndarray],
+    cutoff: float = -np.inf,
+) -> Tuple[plt.Figure, plt.Axes]:
+    """Plot the original data side-by-side with the binary indicator
+    for the local peaks.
+
+    Parameters
+    ----------
+    data : numpy.ndarray, shape=(N, H, W)
+        N 2D arrays of shape (H, W)
+
+    peak_finding_function : Callable[[ndarray], ndarray]
+        A function that will locate the 2D peaks in `data` and
+        create an image with the 2D peaks 
+
+    cutoff : float, optional (default=-np.inf)
+         A threshold value that distinguishes background from foreground
+         
+    Returns
+    -------
+    Tuple[matplotlib.Figure, matplotlib.Axes]
+        The figure and axes objects of the plot
+    """
+    fig, ax = plt.subplots(nrows=len(data), ncols=2)
+    for i, dat in enumerate(data):
+        ax[i, 0].imshow(dat)
+        ax[i, 1].imshow(peak_rendering_func(dat, cutoff=cutoff))
+    return fig, ax
