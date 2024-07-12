@@ -121,7 +121,7 @@ class Interface:
         #export dictionary
         '''
 
-    def compare_fingerprints(fingerprints, songdb):#fingerprint of testing audio
+    def compare_fingerprints(self, fingerprints, songdb):#fingerprint of testing audio
         from collections import Counter
         tally = []
         for f in fingerprints:
