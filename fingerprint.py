@@ -19,7 +19,7 @@ def generate_fingerprints(peaks: List[Tuple[int, int]], fanout: int) -> List[int
 
     peaks = np.array(peaks)
 
-    for i, peak in enumerate(peaks): # for each peak
+    for i in enumerate(peaks): # for each peak
         freq, absolute_time = peaks
         distances = np.sqrt(np.sum((peaks[i:] - peaks[i])**2, axis=1))   
         nearest_indices = np.argsort(distances)[1:fanout + 1]
